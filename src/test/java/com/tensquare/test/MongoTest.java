@@ -7,6 +7,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MongoTest {
     public static void main(String[] args) {
@@ -18,16 +21,23 @@ public class MongoTest {
         MongoCollection<Document> spit = spitdb.getCollection("spit");
         //封装查询条件只查询用户id为1013的
 //        BasicDBObject bson=new BasicDBObject("userid","1013");
-        //封装条件，查询访问量大于1000的 $gt
-        BasicDBObject bson=new BasicDBObject("visits","1013");
+        //封装条件，查询访问量大于1000的 $gt  {转换java就是BasicDBObject
+        //BasicDBObject bson=new BasicDBObject("visits",new BasicDBObject("$gt",1000));
         //得到集合中所有的文档
-        FindIterable<Document> documents=spit.find();
+        //FindIterable<Document> documents=spit.find(bson);
         //遍历数据
-        for (Document document :documents){
-            System.out.println("内容："+document.getString("content"));
-            System.out.println("用户id："+document.getString("userid"));
-            System.out.println("访问量："+document.getDouble("visits"));
-        }
-   mongoClient.close();
+//        for (Document document :documents){
+//            System.out.println("内容："+document.getString("content"));
+//            System.out.println("用户id："+document.getString("userid"));
+//            System.out.println("访问量："+document.getDouble("visits"));
+//        }
+        //添加记录
+        Map<String,Object> map=new HashMap<>();
+        map.put("content","时间过得真快");
+        map.put("userid","1016");
+        map.put("visits",100.0);
+        Document document=new Document(map);
+        spit.insertOne(document);
+        mongoClient.close();
     }
 }
